@@ -4,26 +4,80 @@
 #
 #    pip-compile '.\tools\requirements-dev.in'
 #
+altgraph==0.17.5
+    # via pyinstaller
+auto-py-to-exe==2.50.1
+    # via -r tools/requirements-dev.in
+bottle==0.13.4
+    # via
+    #   bottle-websocket
+    #   eel
+bottle-websocket==0.2.9
+    # via eel
 build==1.5.0
     # via pip-tools
+certifi==2026.5.20
+    # via requests
+cffi==2.0.0
+    # via gevent
+charset-normalizer==3.4.7
+    # via requests
 click==8.4.1
     # via pip-tools
 colorama==0.4.6
     # via
     #   build
     #   click
+eel==0.18.2
+    # via auto-py-to-exe
+future==1.0.0
+    # via eel
+gevent==26.5.0
+    # via gevent-websocket
+gevent-websocket==0.10.1
+    # via bottle-websocket
+greenlet==3.5.1
+    # via gevent
+idna==3.18
+    # via requests
+importlib-resources==7.1.0
+    # via eel
 packaging==26.2
     # via
     #   build
+    #   pyinstaller
+    #   pyinstaller-hooks-contrib
     #   wheel
+pefile==2024.8.26
+    # via pyinstaller
 pip-tools==7.5.3
     # via -r tools/requirements-dev.in
+pycparser==3.0
+    # via cffi
+pyinstaller==6.20.0
+    # via auto-py-to-exe
+pyinstaller-hooks-contrib==2026.6
+    # via pyinstaller
+pyparsing==3.3.2
+    # via eel
 pyproject-hooks==1.2.0
     # via
     #   build
     #   pip-tools
+pywin32-ctypes==0.2.3
+    # via pyinstaller
+requests==2.34.2
+    # via auto-py-to-exe
+typing-extensions==4.15.0
+    # via eel
+urllib3==2.7.0
+    # via requests
 wheel==0.47.0
     # via pip-tools
+zope-event==6.2
+    # via gevent
+zope-interface==8.5
+    # via gevent
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip
