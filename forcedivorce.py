@@ -8,6 +8,8 @@ import numpy as np
 import keyboard
 import threading
 
+import pyperclip
+
 pauseEvent = threading.Event()
 pauseEvent.set()
 
@@ -72,15 +74,30 @@ def findMessageBox(application):
             print("Message box not found")
             return None
 
-def clickMessageBox(application, message):
+
+def writeMessageBox(message, confirmation):
+        pyperclip.copy(message)
+        pyautogui.hotkey('ctrl', 'v')
+
+        pyautogui.sleep(0.5)
+        pyautogui.press("enter")
+
+        pyperclip.copy("")  # Clear clipboard after pasting
+
+        if confirmation == "y":
+            time.sleep(3)
+            pyautogui.press("y")
+            pyautogui.sleep(0.5)
+            pyautogui.press("enter")
+
+def clickMessageBox(application, message, confirmation):
     position = findMessageBox(application)
+
     if position is not None:
         pyautogui.click(position[0], position[1])
         pyautogui.sleep(0.5)
-        pyautogui.write(message)
-        pyautogui.sleep(0.5)
-        pyautogui.press("enter")
         print("Clicked message box")
+        writeMessageBox(message, confirmation)
     else:
         print("Could not click message box because it was not found")
 
@@ -99,29 +116,59 @@ def getCharacterName(filename):
     print(f"Retrieved character name: {character}")
     return character
 
-
-
-def main():
+def registerHotkeys():
     keyboard.on_press_key("esc", lambda _: togglePause())
     keyboard.add_hotkey("ctrl+q", lambda: cancel())
 
+def getConfig():
+    appName = input("Enter the application name (default: Discord): ").strip() or "Discord"
+    channel = input("Channel name: ").strip()
+    filename = input("Name of the file containing character names (default: characters.txt): ").strip() or "characters.txt"
+    command = input("Desired command to send to the message box (default: $forcedivorce): ").strip() or "$forcedivorce"
+    confirmation = input("Will this command require a confirmation (e.g typing y/n or character name afterwards)?").strip().lower()
+
+    return appName, channel, filename, command, confirmation
+
+def printConfig(appName, channel, filename, command, confirmation):
+    print("\nStarting with the following configuration:")
+    print(f"Application Name: {appName}")
+    print(f"Channel Name: {channel}")
+    print(f"Character File: {filename}")
+    print(f"Command: {command}")
+    print(f"Confirmation Required: {confirmation}")
+    print("Press ESC to pause/resume, CTRL+Q to quit.")
+
+def runLoop(appName, channel, filename, command, confirmation):
     try:
         while True:
             pauseEvent.wait()  # Wait until the script is not paused
 
-            discord = applicationIsOpen("discord", "puppets-1")
-            character = getCharacterName("characters.txt")
+            discord = applicationIsOpen(appName, channel)
+
+            character = getCharacterName(filename)
 
             if character is None:
                 break
 
-            clickMessageBox(discord, f"Hello, {character}!")
+            clickMessageBox(discord, f"{command} {character}", confirmation)
             time.sleep(3)
 
         print("Character have been divorced, exiting.")
-        return
+        os._exit(0)
     
     except Exception as e:
         print(f"Error: {e}")
-        return
+        os._exit(1)
+
+def main():
+    registerHotkeys()
+    appName, channel, filename, command, confirmation = getConfig()
+    printConfig(appName, channel, filename, command, confirmation)
+
+    thread = threading.Thread(target=runLoop, args=(appName, channel, filename, command, confirmation))
+    thread.daemon = True
+    thread.start()
+
+    keyboard.wait()
+
 main()
