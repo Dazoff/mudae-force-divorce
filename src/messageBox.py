@@ -1,3 +1,5 @@
+from random import random
+
 import mss
 import cv2
 import numpy as np
@@ -50,15 +52,15 @@ def writeMessageBox(message, confirmation):
         pyperclip.copy(message)
         pyautogui.hotkey('ctrl', 'v')
 
-        pyautogui.sleep(0.5)
+        pyautogui.sleep(random.uniform(0.5, 1.5)) 
         pyautogui.press("enter")
 
         pyperclip.copy("")  # Clear clipboard after pasting
 
         if confirmation == "y":
-            time.sleep(3)
+            time.sleep(random.uniform(2.5, 3.7))
             pyautogui.press("y")
-            pyautogui.sleep(0.5)
+            pyautogui.sleep(random.uniform(0.5, 1.5))
             pyautogui.press("enter")
 
 def clickMessageBox(application, message, confirmation):
@@ -66,7 +68,7 @@ def clickMessageBox(application, message, confirmation):
 
     if position is not None:
         pyautogui.click(position[0], position[1])
-        pyautogui.sleep(0.5)
+        pyautogui.sleep(random.uniform(0.5, 1.5))
         print("Clicked message box")
         writeMessageBox(message, confirmation)
     else:

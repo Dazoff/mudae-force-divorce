@@ -1,4 +1,5 @@
 import os
+import random
 import threading
 import keyboard
 import time
@@ -39,7 +40,7 @@ def runLoop(appName, channel, filename, command, confirmation):
                 break
 
             clickMessageBox(discord, f"{command} {character}", confirmation)
-            time.sleep(3)
+            time.sleep(random.uniform(3.0, 4.0))  # Simulate human-like delay
 
         print("Script is now done, exiting.")
         os._exit(0)
