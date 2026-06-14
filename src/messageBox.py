@@ -2,7 +2,6 @@ import mss
 import cv2
 import numpy as np
 import pyautogui
-import pyautogui
 import pyperclip
 import time
 import os
