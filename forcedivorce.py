@@ -13,6 +13,7 @@ def main():
     thread.daemon = True
     thread.start()
 
-    keyboard.wait()
+    thread.join()
+    input("Press Enter to exit...\n")
 
-main()
+main() 

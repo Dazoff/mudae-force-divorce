@@ -1,5 +1,4 @@
-from random import random
-
+import random
 import mss
 import cv2
 import numpy as np
@@ -31,9 +30,6 @@ def findMessageBox(application):
         result = cv2.matchTemplate(img, needle, cv2.TM_CCOEFF_NORMED)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
 
-        print(f"Confidence: {max_val}")
-        print(f"Location: {max_loc}")
-
         if max_val >= 0.8:
             center_x = max_loc[0] + needle_width // 2
             center_y = max_loc[1] + needle_height // 2
@@ -41,10 +37,8 @@ def findMessageBox(application):
             abs_x = application.left + center_x
             abs_y = application.top + center_y
 
-            print(f"Absolute position: {abs_x}, {abs_y}")
             return (abs_x, abs_y)
         else:
-            print("Message box not found")
             return None
 
 
@@ -69,7 +63,9 @@ def clickMessageBox(application, message, confirmation):
     if position is not None:
         pyautogui.click(position[0], position[1])
         pyautogui.sleep(random.uniform(0.5, 1.5))
-        print("Clicked message box")
+
         writeMessageBox(message, confirmation)
+        return True
     else:
         print("Could not click message box because it was not found")
+        return False

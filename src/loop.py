@@ -1,13 +1,13 @@
-import os
 import random
 import threading
 import keyboard
 import time
 
 from src.application import applicationIsOpen
-from src.character import getCharacterName
+from src.character import getCharacterName, removeCharacterName
 from src.messageBox import clickMessageBox
 
+cancelEvent = threading.Event()
 pauseEvent = threading.Event()
 pauseEvent.set()
 
@@ -21,7 +21,7 @@ def togglePause():
 
 def cancel():
     print("Cancelling script...")
-    os._exit(0)
+    cancelEvent.set()
 
 def registerHotkeys():
     keyboard.on_press_key("esc", lambda _: togglePause())
@@ -29,7 +29,7 @@ def registerHotkeys():
 
 def runLoop(appName, channel, filename, command, confirmation):
     try:
-        while True:
+        while not cancelEvent.is_set():
             pauseEvent.wait()  # Wait until the script is not paused
 
             discord = applicationIsOpen(appName, channel)
@@ -39,12 +39,19 @@ def runLoop(appName, channel, filename, command, confirmation):
             if character is None:
                 break
 
-            clickMessageBox(discord, f"{command} {character}", confirmation)
+            success = clickMessageBox(discord, f"{command} {character}", confirmation)
+            
+            print(success)
+
+            if success:
+                print(f"Successfully removed character: {character}")
+                removeCharacterName(filename, character)
+
             time.sleep(random.uniform(3.0, 4.0))  # Simulate human-like delay
 
         print("Script is now done, exiting.")
-        os._exit(0)
+        return
     
     except Exception as e:
         print(f"Error: {e}")
-        os._exit(1)
+        return

@@ -6,9 +6,15 @@ def getCharacterName(filename):
         return None
     
     character = lines[0].strip()
-    
-    with open(filename, 'w') as f:
-        f.writelines(lines[1:])
 
     print(f"Retrieved character name: {character}")
     return character
+
+def removeCharacterName(filename, character):
+    with open(filename, 'r') as f:
+        lines = f.readlines()
+    
+    with open(filename, 'w') as f:
+        for line in lines:
+            if line.strip() != character:
+                f.write(line)

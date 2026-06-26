@@ -8,7 +8,7 @@ def applicationIsOpen(name, channel):
         raise Exception(f"No window found with title: {name}")
     
     if channel in window.title:
-        print(f"Found application: {window.title}")
+        pass
     else:
         raise Exception(f"Window found but channel '{channel}' incorrect channel selected")
     
